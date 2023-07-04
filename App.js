@@ -21,13 +21,17 @@ export default class App extends Component {
 
   calcular = () => {
     let newList = []
+    let ultimaData = new Date()
     for (let i = 0; i < this.state.parcelas; i++) {
       newList.push({
         id: i,
-        total: this.state.total / this.state.parcelas
+        total: this.state.total / this.state.parcelas,
+        data: ultimaData.setDate(this.state.date.getDate() + this.state.intervalo)
       })
+      
     }
-    this.setState({ lista: newList }, () => { console.warn(newList); })
+    this.setState({ lista: newList }, console.warn(this.state.lista))
+   
   }
 
   getDatePicker = () => {
@@ -50,7 +54,6 @@ export default class App extends Component {
         </View>
       )
     }
-
     return datePicker
   }
 
@@ -58,13 +61,8 @@ export default class App extends Component {
     return (
       <View>
         <View>
-          <View>
-            <TextInput style={styles.input}
-              placeholder='Insira a data.'
-              value={this.state.data}
-              onChangeText={data => this.setState({ data })}
-              keyboardType='numeric'
-            />
+          <View style={styles.input}>
+            {this.getDatePicker()}
           </View>
           <View>
             <TextInput style={styles.input}
@@ -85,14 +83,14 @@ export default class App extends Component {
           <View>
             <TextInput style={styles.input}
               placeholder='Insira o intervalo entre as datas.'
-              value={this.state.intervalo}
-              onChangeText={intervalo => this.setState({ intervalo })}
+              value={this.state.intervalo.toString()}
+              onChangeText={intervalo => this.setState({ intervalo: parseInt(intervalo) })}
               keyboardType='numeric'
             />
           </View>
         </View>
         <View style={styles.botaoContainer}>
-          <TouchableOpacity style={styles.botao} onPress={this.getDatePicker}>
+          <TouchableOpacity style={styles.botao} onPress={this.calcular}>
             <Text style={{ color: '#fff' }}>Calcular</Text>
           </TouchableOpacity>
         </View>
@@ -103,7 +101,7 @@ export default class App extends Component {
             renderItem={({ item, index }) => <Tabela {...item} />}
           />
         </View>
-        {this.getDatePicker()}
+        
       </View>
     )
   }
@@ -118,6 +116,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     shadowColor: '#171717',
     elevation: 10,
+    justifyContent:'center'
   },
   botao: {
     backgroundColor: '#011627',
