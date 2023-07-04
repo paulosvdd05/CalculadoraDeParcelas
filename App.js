@@ -1,13 +1,16 @@
 import React, { Component } from 'react';
 import { View, Text, TextInput, StyleSheet, TouchableHighlight, TouchableOpacity, FlatList } from 'react-native';
 import Tabela from './components/Tabela';
+import DateTimePicker from '@react-native-community/datetimepicker';
+import moment from 'moment'
 
 const initialState = {
-  data: '',
+  date: new Date(),
   parcelas: '',
   total: '',
   intervalo: '',
-  lista: []
+  lista: [],
+  showDatePicker: false
 }
 
 export default class App extends Component {
@@ -17,16 +20,38 @@ export default class App extends Component {
   }
 
   calcular = () => {
+    let newList = []
     for (let i = 0; i < this.state.parcelas; i++) {
-      this.setState({
-        lista: [...this.state.lista, {
-          id: i,
-          total: this.state.total / 5,
-        }]
-      }, () => {
-        
+      newList.push({
+        id: i,
+        total: this.state.total / this.state.parcelas
       })
     }
+    this.setState({ lista: newList }, () => { console.warn(newList); })
+  }
+
+  getDatePicker = () => {
+    let datePicker = <DateTimePicker
+      value={this.state.date}
+      onChange={(_, date) => this.setState({ date, showDatePicker: false })}
+      mode='date' />
+
+    const dateString = moment(this.state.date).format('ddd, D [de] MMMM [de] YYYY')
+
+    if (Platform.OS === 'android') {
+      datePicker = (
+        <View>
+          <TouchableOpacity onPress={() => this.setState({ showDatePicker: true })}>
+            <Text style={styles.date}>
+              {dateString}
+            </Text>
+          </TouchableOpacity>
+          {this.state.showDatePicker && datePicker}
+        </View>
+      )
+    }
+
+    return datePicker
   }
 
   render() {
@@ -67,7 +92,7 @@ export default class App extends Component {
           </View>
         </View>
         <View style={styles.botaoContainer}>
-          <TouchableOpacity style={styles.botao} onPress={this.calcular}>
+          <TouchableOpacity style={styles.botao} onPress={this.getDatePicker}>
             <Text style={{ color: '#fff' }}>Calcular</Text>
           </TouchableOpacity>
         </View>
@@ -78,6 +103,7 @@ export default class App extends Component {
             renderItem={({ item, index }) => <Tabela {...item} />}
           />
         </View>
+        {this.getDatePicker()}
       </View>
     )
   }
