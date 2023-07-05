@@ -21,17 +21,19 @@ export default class App extends Component {
 
   calcular = () => {
     let newList = []
-    let ultimaData = new Date()
+    let ultimaData = new Date(new Date().setDate(this.state.date.getDate()))
+    console.warn(ultimaData);
     for (let i = 0; i < this.state.parcelas; i++) {
+      ultimaData = new Date((ultimaData).setDate(ultimaData.getDate() + this.state.intervalo))
       newList.push({
         id: i,
         total: this.state.total / this.state.parcelas,
-        data: ultimaData.setDate(this.state.date.getDate() + this.state.intervalo)
+        data: `${ultimaData}`
       })
-      
+
     }
-    this.setState({ lista: newList }, console.warn(this.state.lista))
-   
+    this.setState({ lista: newList })
+
   }
 
   getDatePicker = () => {
@@ -101,7 +103,7 @@ export default class App extends Component {
             renderItem={({ item, index }) => <Tabela {...item} />}
           />
         </View>
-        
+
       </View>
     )
   }
@@ -116,7 +118,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     shadowColor: '#171717',
     elevation: 10,
-    justifyContent:'center'
+    justifyContent: 'center'
   },
   botao: {
     backgroundColor: '#011627',
