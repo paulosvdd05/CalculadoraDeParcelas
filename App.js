@@ -9,7 +9,7 @@ const initialState = {
   date: new Date(),
   parcelas: '',
   total: '',
-  intervalo: '',
+  intervalo: '30',
   lista: [],
   showDatePicker: false
 }
@@ -20,21 +20,32 @@ export default class App extends Component {
     ...initialState
   }
 
+   toPrecisao(num, fixed) {
+    var re = new RegExp('^-?\\d+(?:\.\\d{0,' + (fixed || -1) + '})?');
+    return num.toString().match(re)[0];
+}
+
   calcular = () => {
     let newList = []
     let ultimaData = new Date(new Date().setDate(this.state.date.getDate()))
-
+    let soma = 0;
     for (let i = 0; i < this.state.parcelas; i++) {
       ultimaData = new Date((ultimaData).setDate(ultimaData.getDate() + parseInt(this.state.intervalo)))
       newList.push({
         id: i,
         totalParcela: this.state.parcelas,
-        total: this.state.total / this.state.parcelas,
+        total: this.toPrecisao((this.state.total / this.state.parcelas), 2),
         data: `${ultimaData}`
       })
-
     }
-    this.setState({ lista: newList })
+    this.setState({ lista: newList }, () => {
+      soma = this.state.lista.reduce((total, item) => parseFloat(item.total) * this.state.parcelas, 0)
+      if (soma > this.state.total || soma < this.state.total) {
+        this.setState({ ...this.state.lista[this.state.lista[0].total = (this.state.total - soma) + parseFloat(this.state.lista[0].total)] })
+      }
+  
+    })
+    
 
   }
 
@@ -44,7 +55,7 @@ export default class App extends Component {
       onChange={(_, date) => this.setState({ date, showDatePicker: false })}
       mode='date' />
 
-    const dateString = moment(this.state.date).format('ddd, D [de] MMMM [de] YYYY')
+    const dateString = moment(this.state.date).format(' DD[/]MM[/]YYYY')
 
     if (Platform.OS === 'android') {
       datePicker = (
@@ -65,30 +76,36 @@ export default class App extends Component {
     return (
       <View>
         <View>
-          <View style={styles.input}>
-            {this.getDatePicker()}
+          <View style={styles.inputContainer}>
+            <Text>Data:</Text>
+            <View style={styles.input}>
+              {this.getDatePicker()}
+            </View>
           </View>
-          <View>
+          <View style={styles.inputContainer}>
+            <Text>Parcelas:</Text>
             <TextInput style={styles.input}
               placeholder='Insira a quantidade de parcelas.'
               value={this.state.parcelas}
-              onChangeText={parcelas => this.setState({ parcelas})}
+              onChangeText={parcelas => this.setState({ parcelas })}
               keyboardType='numeric'
             />
           </View>
-          <View>
+          <View style={styles.inputContainer}>
+            <Text>Total:</Text>
             <TextInput style={styles.input}
               placeholder='Insira o valor total.'
               value={this.state.total}
-              onChangeText={total => this.setState({ total})}
+              onChangeText={total => this.setState({ total })}
               keyboardType='numeric'
             />
           </View>
-          <View>
+          <View style={styles.inputContainer}>
+            <Text>Intervalo Entre Datas:</Text>
             <TextInput style={styles.input}
               placeholder='Insira o intervalo entre as datas.'
               value={this.state.intervalo}
-              onChangeText={intervalo => this.setState({ intervalo})}
+              onChangeText={intervalo => this.setState({ intervalo })}
               keyboardType='numeric'
             />
           </View>
@@ -98,11 +115,11 @@ export default class App extends Component {
             <Text style={{ color: '#fff' }}>Calcular</Text>
           </TouchableOpacity>
         </View>
-        <View>
+        <View style={{ height: 200 }}>
           <FlatList style={styles.prodList}
             data={this.state.lista}
             keyExtractor={item => `${item.id}`}
-            renderItem={({ item, index }) => <Tabela {...item} data={moment(`${item.data}`).format('ddd, D [de] MMMM [de] YYYY')} index={index} />}
+            renderItem={({ item, index }) => <Tabela {...item} data={moment(new Date(item.data)).format('DD[/]MM[/]YYYY')} index={index} />}
           />
         </View>
 
@@ -114,8 +131,6 @@ export default class App extends Component {
 const styles = StyleSheet.create({
   input: {
     height: 40,
-    marginHorizontal: 10,
-    marginTop: 10,
     backgroundColor: '#fff',
     borderRadius: 10,
     shadowColor: '#171717',
@@ -131,5 +146,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginTop: 20
+  },
+  inputContainer: {
+    marginHorizontal: 10, marginTop: 10,
   }
 })
