@@ -1,9 +1,13 @@
 import React, { Component } from 'react';
-import { View, Text, TextInput, StyleSheet, TouchableHighlight, TouchableOpacity, FlatList } from 'react-native';
+import { View, Text, TextInput, StyleSheet, TouchableHighlight, Dimensions, TouchableOpacity, FlatList, Alert } from 'react-native';
 import Tabela from './components/Tabela';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import moment from 'moment'
 import 'moment/locale/pt-br'
+
+const windowWidth = Dimensions.get('window').width;
+const windowHeight = Dimensions.get('window').height;
+
 
 const initialState = {
   date: new Date(),
@@ -20,32 +24,44 @@ export default class App extends Component {
     ...initialState
   }
 
-   toPrecisao(num, fixed) {
+  toPrecisao(num, fixed) {
     var re = new RegExp('^-?\\d+(?:\.\\d{0,' + (fixed || -1) + '})?');
     return num.toString().match(re)[0];
-}
+  }
 
   calcular = () => {
-    let newList = []
-    let ultimaData = new Date(new Date().setDate(this.state.date.getDate()))
-    let soma = 0;
-    for (let i = 0; i < this.state.parcelas; i++) {
-      ultimaData = new Date((ultimaData).setDate(ultimaData.getDate() + parseInt(this.state.intervalo)))
-      newList.push({
-        id: i,
-        totalParcela: this.state.parcelas,
-        total: this.toPrecisao((this.state.total / this.state.parcelas), 2),
-        data: `${ultimaData}`
-      })
+    if (this.state.parcelas == '' || this.state.total == '' || this.state.intervalo == '') {
+        Alert.alert(
+          'Atenção',
+          'Preencha todos os campos!',
+          [
+            { text: 'ENTENDI'}
+          ],
+          { cancelable: false }
+        );
     }
-    this.setState({ lista: newList }, () => {
-      soma = this.state.lista.reduce((total, item) => parseFloat(item.total) * this.state.parcelas, 0)
-      if (soma > this.state.total || soma < this.state.total) {
-        this.setState({ ...this.state.lista[this.state.lista[0].total = (this.state.total - soma) + parseFloat(this.state.lista[0].total)] })
+    let newList = []
+    let ultimaData = new Date(this.state.date)
+    let soma = 0;
+    this.setState({ total: this.state.total.replace(',', '.') }, () => {
+      for (let i = 0; i < this.state.parcelas; i++) {
+        ultimaData = new Date((ultimaData).setDate(ultimaData.getDate() + parseInt(this.state.intervalo)))
+        newList.push({
+          id: i,
+          totalParcela: this.state.parcelas,
+          total: parseFloat(this.toPrecisao((this.state.total / this.state.parcelas), 2)),
+          data: `${ultimaData}`
+        })
       }
-  
+      this.setState({ lista: newList }, () => {
+        soma = this.state.lista.reduce((total, item) => parseFloat(item.total) * this.state.parcelas, 0)
+        if (soma > this.state.total || soma < this.state.total) {
+          this.setState({ ...this.state.lista[this.state.lista[0].total = (this.state.total - soma) + this.state.lista[0].total] })
+        }
+      })
     })
-    
+
+
 
   }
 
@@ -75,7 +91,7 @@ export default class App extends Component {
   render() {
     return (
       <View>
-        <View>
+        <View style={styles.formContainer}>
           <View style={styles.inputContainer}>
             <Text>Data:</Text>
             <View style={styles.input}>
@@ -93,12 +109,15 @@ export default class App extends Component {
           </View>
           <View style={styles.inputContainer}>
             <Text>Total:</Text>
-            <TextInput style={styles.input}
-              placeholder='Insira o valor total.'
-              value={this.state.total}
-              onChangeText={total => this.setState({ total })}
-              keyboardType='numeric'
-            />
+            <View style={[styles.input, { flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-start' }]}>
+              <Text style={{ color: '#857d83' }}> R$</Text>
+              <TextInput style={{ width: '100%' }}
+                value={this.state.total}
+                onChangeText={total => this.setState({ total })}
+                keyboardType='numeric'
+              />
+            </View>
+
           </View>
           <View style={styles.inputContainer}>
             <Text>Intervalo Entre Datas:</Text>
@@ -109,13 +128,13 @@ export default class App extends Component {
               keyboardType='numeric'
             />
           </View>
+          <View style={styles.botaoContainer}>
+            <TouchableOpacity style={styles.botao} onPress={this.calcular}>
+              <Text style={{ color: '#fff' }}>Calcular</Text>
+            </TouchableOpacity>
+          </View>
         </View>
-        <View style={styles.botaoContainer}>
-          <TouchableOpacity style={styles.botao} onPress={this.calcular}>
-            <Text style={{ color: '#fff' }}>Calcular</Text>
-          </TouchableOpacity>
-        </View>
-        <View style={{ height: 200 }}>
+        <View style={styles.FlatListContainer}>
           <FlatList style={styles.prodList}
             data={this.state.lista}
             keyExtractor={item => `${item.id}`}
@@ -149,5 +168,18 @@ const styles = StyleSheet.create({
   },
   inputContainer: {
     marginHorizontal: 10, marginTop: 10,
+  },
+  FlatListContainer: {
+    height: windowHeight * 0.4,
+    backgroundColor: '#fff',
+    marginVertical: windowHeight * 0.02,
+    marginHorizontal:10,
+    borderRadius:15,
+    shadowColor: '#171717',
+    elevation: 10,
+
+  },
+  formContainer:{
+    height: windowHeight * 0.5,
   }
 })
