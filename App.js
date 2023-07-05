@@ -3,6 +3,7 @@ import { View, Text, TextInput, StyleSheet, TouchableHighlight, TouchableOpacity
 import Tabela from './components/Tabela';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import moment from 'moment'
+import 'moment/locale/pt-br'
 
 const initialState = {
   date: new Date(),
@@ -22,11 +23,12 @@ export default class App extends Component {
   calcular = () => {
     let newList = []
     let ultimaData = new Date(new Date().setDate(this.state.date.getDate()))
-    console.warn(ultimaData);
+
     for (let i = 0; i < this.state.parcelas; i++) {
-      ultimaData = new Date((ultimaData).setDate(ultimaData.getDate() + this.state.intervalo))
+      ultimaData = new Date((ultimaData).setDate(ultimaData.getDate() + parseInt(this.state.intervalo)))
       newList.push({
         id: i,
+        totalParcela: this.state.parcelas,
         total: this.state.total / this.state.parcelas,
         data: `${ultimaData}`
       })
@@ -69,24 +71,24 @@ export default class App extends Component {
           <View>
             <TextInput style={styles.input}
               placeholder='Insira a quantidade de parcelas.'
-              value={this.state.parcelas.toString()}
-              onChangeText={parcelas => this.setState({ parcelas: parseInt(parcelas) })}
+              value={this.state.parcelas}
+              onChangeText={parcelas => this.setState({ parcelas})}
               keyboardType='numeric'
             />
           </View>
           <View>
             <TextInput style={styles.input}
               placeholder='Insira o valor total.'
-              value={this.state.total.toString()}
-              onChangeText={total => this.setState({ total: parseInt(total) })}
+              value={this.state.total}
+              onChangeText={total => this.setState({ total})}
               keyboardType='numeric'
             />
           </View>
           <View>
             <TextInput style={styles.input}
               placeholder='Insira o intervalo entre as datas.'
-              value={this.state.intervalo.toString()}
-              onChangeText={intervalo => this.setState({ intervalo: parseInt(intervalo) })}
+              value={this.state.intervalo}
+              onChangeText={intervalo => this.setState({ intervalo})}
               keyboardType='numeric'
             />
           </View>
@@ -100,7 +102,7 @@ export default class App extends Component {
           <FlatList style={styles.prodList}
             data={this.state.lista}
             keyExtractor={item => `${item.id}`}
-            renderItem={({ item, index }) => <Tabela {...item} />}
+            renderItem={({ item, index }) => <Tabela {...item} data={moment(`${item.data}`).format('ddd, D [de] MMMM [de] YYYY')} index={index} />}
           />
         </View>
 
