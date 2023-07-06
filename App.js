@@ -112,7 +112,7 @@ export default class App extends Component {
           <View style={styles.inputContainer}>
             <Text>Total:</Text>
             <View style={[styles.input, { flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-start' }]}>
-              <MaskInput style={{ width: '100%', alignItems:'center', justifyContent:'center'}}
+              <MaskInput style={styles.input}
                 value={this.state.total}
                 mask={Masks.BRL_CURRENCY}
                 onChangeText={total => this.setState({ total })}
@@ -153,6 +153,7 @@ const styles = StyleSheet.create({
   input: {
     height: 40,
     backgroundColor: '#fff',
+    color:'#313131',
     borderRadius: 10,
     shadowColor: '#171717',
     elevation: 10,
@@ -184,5 +185,11 @@ const styles = StyleSheet.create({
   },
   formContainer: {
     flex: 3,
+  },
+  prodList:{
+    marginVertical:10,
+  },
+  date:{
+    color:'#313131'
   }
 })
