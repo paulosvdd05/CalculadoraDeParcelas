@@ -13,7 +13,7 @@ public class MainActivity extends ReactActivity {
    */
   @Override
   protected String getMainComponentName() {
-    return "calendarioLogica";
+    return "Calculadora de Parcelas";
   }
 
   /**

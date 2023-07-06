@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-               BuildableName = "calendarioLogica.app"
-               BlueprintName = "calendarioLogica"
-               ReferencedContainer = "container:calendarioLogica.xcodeproj">
+               BuildableName = "CalculadoradeParcelas.app"
+               BlueprintName = "CalculadoradeParcelas"
+               ReferencedContainer = "container:CalculadoradeParcelas.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -33,9 +33,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "00E356ED1AD99517003FC87E"
-               BuildableName = "calendarioLogicaTests.xctest"
-               BlueprintName = "calendarioLogicaTests"
-               ReferencedContainer = "container:calendarioLogica.xcodeproj">
+               BuildableName = "CalculadoradeParcelasTests.xctest"
+               BlueprintName = "CalculadoradeParcelasTests"
+               ReferencedContainer = "container:CalculadoradeParcelas.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -55,9 +55,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "calendarioLogica.app"
-            BlueprintName = "calendarioLogica"
-            ReferencedContainer = "container:calendarioLogica.xcodeproj">
+            BuildableName = "CalculadoradeParcelas.app"
+            BlueprintName = "CalculadoradeParcelas"
+            ReferencedContainer = "container:CalculadoradeParcelas.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -72,9 +72,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "calendarioLogica.app"
-            BlueprintName = "calendarioLogica"
-            ReferencedContainer = "container:calendarioLogica.xcodeproj">
+            BuildableName = "CalculadoradeParcelas.app"
+            BlueprintName = "CalculadoradeParcelas"
+            ReferencedContainer = "container:CalculadoradeParcelas.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>
