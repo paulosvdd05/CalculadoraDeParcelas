@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, TextInput, StyleSheet, TouchableHighlight, TouchableNativeFeedback, Dimensions, TouchableOpacity, FlatList, Alert } from 'react-native';
+import { View, Text, TextInput, StyleSheet, Keyboard, TouchableNativeFeedback, Dimensions, TouchableOpacity, FlatList, Alert } from 'react-native';
 import Tabela from './components/Tabela';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import moment from 'moment'
@@ -30,6 +30,7 @@ export default class App extends Component {
   }
 
   calcular = () => {
+    Keyboard.dismiss()
     if (this.state.parcelas == '' || this.state.total == '' || this.state.intervalo == '') {
       Alert.alert(
         'Atenção',
@@ -131,7 +132,7 @@ export default class App extends Component {
         </View>
         <View style={styles.botaoContainer}>
           <TouchableOpacity style={styles.botao} onPress={this.calcular}>
-            <Text style={{ color: '#fff' }}>Calcular</Text>
+            <Text style={{ color: '#fff', fontWeight:'bold' }}>Calcular</Text>
           </TouchableOpacity>
         </View>
         <View style={styles.FlatListContainer}>
@@ -157,7 +158,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center'
   },
   botao: {
-    backgroundColor: '#011627',
+    backgroundColor: '#024EB4',
     padding: 10,
     borderRadius: 5
   },
