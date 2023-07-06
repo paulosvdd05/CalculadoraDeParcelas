@@ -115,7 +115,7 @@ export default class App extends Component {
               <MaskInput style={{ width: '100%', alignItems:'center', justifyContent:'center'}}
                 value={this.state.total}
                 mask={Masks.BRL_CURRENCY}
-                onChangeText={total => this.setState({ total }, () => {console.warn(this.state.total)})}
+                onChangeText={total => this.setState({ total })}
                 keyboardType='numeric'
               />
             </View>
