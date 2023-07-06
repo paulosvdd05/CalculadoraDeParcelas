@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, TextInput, StyleSheet, TouchableHighlight, Dimensions, TouchableOpacity, FlatList, Alert } from 'react-native';
+import { View, Text, TextInput, StyleSheet, TouchableHighlight, TouchableNativeFeedback, Dimensions, TouchableOpacity, FlatList, Alert } from 'react-native';
 import Tabela from './components/Tabela';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import moment from 'moment'
@@ -31,35 +31,35 @@ export default class App extends Component {
 
   calcular = () => {
     if (this.state.parcelas == '' || this.state.total == '' || this.state.intervalo == '') {
-        Alert.alert(
-          'Atenção',
-          'Preencha todos os campos!',
-          [
-            { text: 'ENTENDI'}
-          ],
-          { cancelable: false }
-        );
+      Alert.alert(
+        'Atenção',
+        'Preencha todos os campos!',
+        [
+          { text: 'ENTENDI' }
+        ],
+        { cancelable: false }
+      );
     }
     let newList = []
     let ultimaData = new Date(this.state.date)
     let soma = 0;
-    this.setState({ total: this.state.total.replace(',', '.') }, () => {
-      for (let i = 0; i < this.state.parcelas; i++) {
-        ultimaData = new Date((ultimaData).setDate(ultimaData.getDate() + parseInt(this.state.intervalo)))
-        newList.push({
-          id: i,
-          totalParcela: this.state.parcelas,
-          total: parseFloat(this.toPrecisao((this.state.total / this.state.parcelas), 2)),
-          data: `${ultimaData}`
-        })
-      }
-      this.setState({ lista: newList }, () => {
-        soma = this.state.lista.reduce((total, item) => parseFloat(item.total) * this.state.parcelas, 0)
-        if (soma > this.state.total || soma < this.state.total) {
-          this.setState({ ...this.state.lista[this.state.lista[0].total = (this.state.total - soma) + this.state.lista[0].total] })
-        }
+
+    for (let i = 0; i < this.state.parcelas; i++) {
+      ultimaData = new Date((ultimaData).setDate(ultimaData.getDate() + parseInt(this.state.intervalo)))
+      newList.push({
+        id: i,
+        totalParcela: this.state.parcelas,
+        total: parseFloat(this.toPrecisao((this.state.total.replace(',', '.') / this.state.parcelas), 2)),
+        data: `${ultimaData}`
       })
+    }
+    this.setState({ lista: newList }, () => {
+      soma = this.state.lista.reduce((total, item) => parseFloat(item.total) * this.state.parcelas, 0)
+      if (soma > this.state.total.replace(',', '.') || soma < this.state.total.replace(',', '.')) {
+        this.setState({ ...this.state.lista[this.state.lista[0].total = (this.state.total.replace(',', '.') - soma) + this.state.lista[0].total] })
+      }
     })
+
 
 
 
@@ -90,7 +90,7 @@ export default class App extends Component {
 
   render() {
     return (
-      <View>
+      <View style={{ flex: 1, justifyContent:'space-evenly' }}>
         <View style={styles.formContainer}>
           <View style={styles.inputContainer}>
             <Text>Data:</Text>
@@ -128,11 +128,11 @@ export default class App extends Component {
               keyboardType='numeric'
             />
           </View>
-          <View style={styles.botaoContainer}>
-            <TouchableOpacity style={styles.botao} onPress={this.calcular}>
-              <Text style={{ color: '#fff' }}>Calcular</Text>
-            </TouchableOpacity>
-          </View>
+        </View>
+        <View style={styles.botaoContainer}>
+          <TouchableOpacity style={styles.botao} onPress={this.calcular}>
+            <Text style={{ color: '#fff' }}>Calcular</Text>
+          </TouchableOpacity>
         </View>
         <View style={styles.FlatListContainer}>
           <FlatList style={styles.prodList}
@@ -164,22 +164,21 @@ const styles = StyleSheet.create({
   botaoContainer: {
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 20
+    flex:1
   },
   inputContainer: {
     marginHorizontal: 10, marginTop: 10,
   },
   FlatListContainer: {
-    height: windowHeight * 0.4,
+    flex: 3,
     backgroundColor: '#fff',
-    marginVertical: windowHeight * 0.02,
-    marginHorizontal:10,
-    borderRadius:15,
+    marginHorizontal: 10,
+    borderRadius: 15,
     shadowColor: '#171717',
     elevation: 10,
-
+    marginBottom:10
   },
-  formContainer:{
-    height: windowHeight * 0.5,
+  formContainer: {
+    flex: 3,
   }
 })
