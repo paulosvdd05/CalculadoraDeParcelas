@@ -4,6 +4,7 @@ import Tabela from './components/Tabela';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import moment from 'moment'
 import 'moment/locale/pt-br'
+import MaskInput, { Masks } from 'react-native-mask-input';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -50,14 +51,14 @@ export default class App extends Component {
       newList.push({
         id: i,
         totalParcela: this.state.parcelas,
-        total: parseFloat(this.toPrecisao((this.state.total.replace(',', '.') / this.state.parcelas), 2)),
+        total: parseFloat(this.toPrecisao((this.state.total.replace(',', '.').replace('R$', '').replace('R$', '') / this.state.parcelas), 2)),
         data: `${ultimaData}`
       })
     }
     this.setState({ lista: newList }, () => {
       soma = this.state.lista.reduce((total, item) => parseFloat(item.total) * this.state.parcelas, 0)
-      if (soma > this.state.total.replace(',', '.') || soma < this.state.total.replace(',', '.')) {
-        this.setState({ ...this.state.lista[this.state.lista[0].total = (this.state.total.replace(',', '.') - soma) + this.state.lista[0].total] })
+      if (soma > this.state.total.replace(',', '.').replace('R$', '') || soma < this.state.total.replace(',', '.').replace('R$', '')) {
+        this.setState({ ...this.state.lista[this.state.lista[0].total = (this.state.total.replace(',', '.').replace('R$', '') - soma) + this.state.lista[0].total] })
       }
     })
 
@@ -111,10 +112,10 @@ export default class App extends Component {
           <View style={styles.inputContainer}>
             <Text>Total:</Text>
             <View style={[styles.input, { flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-start' }]}>
-              <Text style={{ color: '#857d83' }}> R$</Text>
-              <TextInput style={{ width: '100%' }}
+              <MaskInput style={{ width: '100%', alignItems:'center', justifyContent:'center'}}
                 value={this.state.total}
-                onChangeText={total => this.setState({ total })}
+                mask={Masks.BRL_CURRENCY}
+                onChangeText={total => this.setState({ total }, () => {console.warn(this.state.total)})}
                 keyboardType='numeric'
               />
             </View>
