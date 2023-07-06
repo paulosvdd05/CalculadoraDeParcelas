@@ -111,15 +111,13 @@ export default class App extends Component {
           </View>
           <View style={styles.inputContainer}>
             <Text>Total:</Text>
-            <View style={[styles.input, { flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-start' }]}>
+            
               <MaskInput style={styles.input}
                 value={this.state.total}
                 mask={Masks.BRL_CURRENCY}
                 onChangeText={total => this.setState({ total })}
                 keyboardType='numeric'
               />
-            </View>
-
           </View>
           <View style={styles.inputContainer}>
             <Text>Intervalo Entre Datas:</Text>
@@ -157,7 +155,8 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     shadowColor: '#171717',
     elevation: 10,
-    justifyContent: 'center'
+    justifyContent: 'center',
+    width:'100%'
   },
   botao: {
     backgroundColor: '#024EB4',
