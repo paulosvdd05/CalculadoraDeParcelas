@@ -25,9 +25,9 @@ export default class App extends Component {
     ...initialState
   }
 
-  toPrecisao(num, fixed) {
-    var re = new RegExp('^-?\\d+(?:\.\\d{0,' + (fixed || -1) + '})?');
-    return num.toString().match(re)[0];
+  toPrecisao(nr, casas) {
+    const og = Math.pow(10, casas)
+    return Math.trunc(nr * og) / og;
   }
 
   calcular = () => {
@@ -51,14 +51,14 @@ export default class App extends Component {
       newList.push({
         id: i,
         totalParcela: this.state.parcelas,
-        total: parseFloat(this.toPrecisao((this.state.total.replace(',', '.').replace('R$', '').replace('R$', '') / this.state.parcelas), 2)),
+        total: parseFloat(this.toPrecisao((this.state.total.replace('.', '').replace(',', '.').replace('R$', '') / this.state.parcelas), 2)),
         data: `${ultimaData}`
       })
     }
     this.setState({ lista: newList }, () => {
       soma = this.state.lista.reduce((total, item) => parseFloat(item.total) * this.state.parcelas, 0)
-      if (soma > this.state.total.replace(',', '.').replace('R$', '') || soma < this.state.total.replace(',', '.').replace('R$', '')) {
-        this.setState({ ...this.state.lista[this.state.lista[0].total = (this.state.total.replace(',', '.').replace('R$', '') - soma) + this.state.lista[0].total] })
+      if (soma > this.state.total.replace('.', '').replace(',', '.').replace('R$', '') || soma < this.state.total.replace('.', '').replace(',', '.').replace('R$', '')) {
+        this.setState({ ...this.state.lista[this.state.lista[0].total = (this.state.total.replace('.', '').replace(',', '.').replace('R$', '') - soma) + this.state.lista[0].total] })
       }
     })
 
