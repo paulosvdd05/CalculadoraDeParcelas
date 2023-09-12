@@ -5,7 +5,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import moment from 'moment'
 import 'moment/locale/pt-br'
 import MaskInput, { Masks } from 'react-native-mask-input';
-
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
@@ -16,7 +16,8 @@ const initialState = {
   total: '',
   intervalo: '30',
   lista: [],
-  showDatePicker: false
+  showDatePicker: false,
+  tipoCalendario: 'Selecionar'
 }
 
 export default class App extends Component {
@@ -31,6 +32,7 @@ export default class App extends Component {
   }
 
   calcular = () => {
+    
     Keyboard.dismiss()
     if (this.state.parcelas == '' || this.state.total == '' || this.state.intervalo == '') {
       Alert.alert(
@@ -43,7 +45,7 @@ export default class App extends Component {
       );
     }
     let newList = []
-    let ultimaData = new Date(this.state.date)
+    let ultimaData = this.state.tipoCalendario == 'Escrever' ? moment(this.state.date, "DD/MM/YYYY").toDate() : new Date(this.state.date)
     let soma = 0;
 
     for (let i = 0; i < this.state.parcelas; i++) {
@@ -92,12 +94,27 @@ export default class App extends Component {
 
   render() {
     return (
-      <View style={{ flex: 1, justifyContent:'space-evenly' }}>
+      <View style={{ flex: 1, justifyContent: 'space-evenly' }}>
         <View style={styles.formContainer}>
           <View style={styles.inputContainer}>
             <Text>Data:</Text>
-            <View style={styles.input}>
-              {this.getDatePicker()}
+            <View style={[styles.input, { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }]}>
+              {this.state.tipoCalendario == 'Selecionar' ? this.getDatePicker() : <MaskInput
+                style={{ flex: 1 }}
+                value={this.state.date}
+                mask={Masks.DATE_DDMMYYYY}
+                onChangeText={date => this.setState({ date })}
+                keyboardType='numeric' />}
+              <View style={{ flexDirection: 'row', marginRight: 5 }}>
+                <TouchableNativeFeedback onPress={() => this.setState({ tipoCalendario: 'Selecionar', date: new Date()  })}>
+                  <Icon name='calendar-month' size={25} color={this.state.tipoCalendario == 'Selecionar' ? '#024EB4' : null} />
+                </TouchableNativeFeedback>
+                <TouchableNativeFeedback onPress={() => this.setState({ tipoCalendario: 'Escrever', date: moment(this.state.date).format(' DD[/]MM[/]YYYY') })}>
+                  <Icon name='calendar-edit' size={25} color={this.state.tipoCalendario == 'Escrever' ? '#024EB4' : null} />
+                </TouchableNativeFeedback>
+
+              </View>
+
             </View>
           </View>
           <View style={styles.inputContainer}>
@@ -111,13 +128,13 @@ export default class App extends Component {
           </View>
           <View style={styles.inputContainer}>
             <Text>Total:</Text>
-            
-              <MaskInput style={styles.input}
-                value={this.state.total}
-                mask={Masks.BRL_CURRENCY}
-                onChangeText={total => this.setState({ total })}
-                keyboardType='numeric'
-              />
+
+            <MaskInput style={styles.input}
+              value={this.state.total}
+              mask={Masks.BRL_CURRENCY}
+              onChangeText={total => this.setState({ total })}
+              keyboardType='numeric'
+            />
           </View>
           <View style={styles.inputContainer}>
             <Text>Intervalo Entre Datas:</Text>
@@ -131,7 +148,7 @@ export default class App extends Component {
         </View>
         <View style={styles.botaoContainer}>
           <TouchableOpacity style={styles.botao} onPress={this.calcular}>
-            <Text style={{ color: '#fff', fontWeight:'bold' }}>Calcular</Text>
+            <Text style={{ color: '#fff', fontWeight: 'bold' }}>Calcular</Text>
           </TouchableOpacity>
         </View>
         <View style={styles.FlatListContainer}>
@@ -151,12 +168,12 @@ const styles = StyleSheet.create({
   input: {
     height: 40,
     backgroundColor: '#fff',
-    color:'#313131',
+    color: '#313131',
     borderRadius: 10,
     shadowColor: '#171717',
     elevation: 10,
     justifyContent: 'center',
-    width:'100%'
+    width: '100%'
   },
   botao: {
     backgroundColor: '#024EB4',
@@ -168,7 +185,7 @@ const styles = StyleSheet.create({
   botaoContainer: {
     justifyContent: 'center',
     alignItems: 'center',
-    flex:1
+    flex: 1
   },
   inputContainer: {
     marginHorizontal: 10, marginTop: 10,
@@ -180,15 +197,15 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     shadowColor: '#171717',
     elevation: 10,
-    marginBottom:10
+    marginBottom: 10
   },
   formContainer: {
     flex: 3,
   },
-  prodList:{
-    marginVertical:10,
+  prodList: {
+    marginVertical: 10,
   },
-  date:{
-    color:'#313131'
+  date: {
+    color: '#313131'
   }
 })
