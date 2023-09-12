@@ -79,8 +79,8 @@ export default class App extends Component {
 
     if (Platform.OS === 'android') {
       datePicker = (
-        <View>
-          <TouchableOpacity onPress={() => this.setState({ showDatePicker: true })}>
+        <View style={{flex:1}}>
+          <TouchableOpacity  onPress={() => this.setState({ showDatePicker: true })}>
             <Text style={styles.date}>
               {dateString}
             </Text>
