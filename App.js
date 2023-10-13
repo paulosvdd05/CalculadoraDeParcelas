@@ -153,12 +153,13 @@ export default class App extends Component {
             <Text style={{ color: '#fff', fontWeight: 'bold' }}>Calcular</Text>
           </TouchableOpacity>
         </View>
-        <View style={styles.FlatListContainer}>
-          <FlatList style={styles.prodList}
+        <View style={[styles.FlatListContainer, this.state.parcelas == '' ? {justifyContent:'center', alignItems:'center'} : null ]}>
+        {this.state.parcelas == '' ? <Text>Nenhuma parcela calculada...</Text>
+           : <FlatList style={styles.prodList}
             data={this.state.lista}
             keyExtractor={item => `${item.id}`}
             renderItem={({ item, index }) => <Tabela {...item} data={moment(new Date(item.data)).format('DD[/]MM[/]YYYY')} index={index} />}
-          />
+          />}
         </View>
 
       </View>
@@ -199,7 +200,8 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     shadowColor: '#171717',
     elevation: 10,
-    marginBottom: 10
+    marginBottom: 10,
+    
   },
   formContainer: {
     flex: 3,
