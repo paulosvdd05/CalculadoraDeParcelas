@@ -32,7 +32,7 @@ export default class App extends Component {
   }
 
   calcular = () => {
-    
+
     Keyboard.dismiss()
     if (this.state.parcelas == '' || this.state.total == '' || this.state.intervalo == '') {
       Alert.alert(
@@ -43,28 +43,30 @@ export default class App extends Component {
         ],
         { cancelable: false }
       );
-    }
-    let newList = []
-    let ultimaData = this.state.tipoCalendario == 'Escrever' ? moment(this.state.date, "DD/MM/YYYY").toDate() : new Date(this.state.date)
-    let soma = 0;
+    } else {
+      let newList = []
+      let ultimaData = this.state.tipoCalendario == 'Escrever' ? moment(this.state.date, "DD/MM/YYYY").toDate() : new Date(this.state.date)
+      let soma = 0;
 
-    for (let i = 0; i < this.state.parcelas; i++) {
-      ultimaData = new Date((ultimaData).setDate(ultimaData.getDate() + parseInt(this.state.intervalo)))
-      newList.push({
-        id: i,
-        totalParcela: this.state.parcelas,
-        total: parseFloat(this.toPrecisao((this.state.total.replace('.', '').replace(',', '.').replace('R$', '') / this.state.parcelas), 2)),
-        data: `${ultimaData}`
-      })
-    }
-    this.setState({ lista: newList }, () => {
-      soma = this.state.lista.reduce((total, item) => parseFloat(item.total) * this.state.parcelas, 0)
-      if (soma > this.state.total.replace('.', '').replace(',', '.').replace('R$', '') || soma < this.state.total.replace('.', '').replace(',', '.').replace('R$', '')) {
-        this.setState({ ...this.state.lista[this.state.lista[0].total = (this.state.total.replace('.', '').replace(',', '.').replace('R$', '') - soma) + this.state.lista[0].total] })
+      for (let i = 0; i < this.state.parcelas; i++) {
+        ultimaData = new Date((ultimaData).setDate(ultimaData.getDate() + parseInt(this.state.intervalo)))
+        newList.push({
+          id: i,
+          totalParcela: this.state.parcelas,
+          total: parseFloat(this.toPrecisao((this.state.total.replace('.', '').replace(',', '.').replace('R$', '') / this.state.parcelas), 2)),
+          data: `${ultimaData}`
+        })
       }
-    })
+      this.setState({ lista: newList }, () => {
+        soma = this.state.lista.reduce((total, item) => parseFloat(item.total) * this.state.parcelas, 0)
+        if (soma > this.state.total.replace('.', '').replace(',', '.').replace('R$', '') || soma < this.state.total.replace('.', '').replace(',', '.').replace('R$', '')) {
+          this.setState({ ...this.state.lista[this.state.lista[0].total = (this.state.total.replace('.', '').replace(',', '.').replace('R$', '') - soma) + this.state.lista[0].total] })
+        }
+      })
 
 
+
+    }
 
 
   }
@@ -79,8 +81,8 @@ export default class App extends Component {
 
     if (Platform.OS === 'android') {
       datePicker = (
-        <View style={{flex:1}}>
-          <TouchableOpacity  onPress={() => this.setState({ showDatePicker: true })}>
+        <View style={{ flex: 1 }}>
+          <TouchableOpacity onPress={() => this.setState({ showDatePicker: true })}>
             <Text style={styles.date}>
               {dateString}
             </Text>
@@ -106,7 +108,7 @@ export default class App extends Component {
                 onChangeText={date => this.setState({ date })}
                 keyboardType='numeric' />}
               <View style={{ flexDirection: 'row', marginRight: 5 }}>
-                <TouchableNativeFeedback onPress={() => this.setState({ tipoCalendario: 'Selecionar', date: new Date()  })}>
+                <TouchableNativeFeedback onPress={() => this.setState({ tipoCalendario: 'Selecionar', date: new Date() })}>
                   <Icon name='calendar-month' size={25} color={this.state.tipoCalendario == 'Selecionar' ? '#024EB4' : null} />
                 </TouchableNativeFeedback>
                 <TouchableNativeFeedback onPress={() => this.setState({ tipoCalendario: 'Escrever', date: moment(this.state.date).format(' DD[/]MM[/]YYYY') })}>
