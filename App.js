@@ -109,10 +109,10 @@ export default class App extends Component {
                 keyboardType='numeric' />}
               <View style={{ flexDirection: 'row', marginRight: 5 }}>
                 <TouchableNativeFeedback onPress={() => this.setState({ tipoCalendario: 'Selecionar', date: new Date() })}>
-                  <Icon name='calendar-month' size={25} color={this.state.tipoCalendario == 'Selecionar' ? '#024EB4' : null} />
+                  <Icon name='calendar-month' size={25} color={this.state.tipoCalendario == 'Selecionar' ? '#024EB4' : '#757575'} />
                 </TouchableNativeFeedback>
                 <TouchableNativeFeedback onPress={() => this.setState({ tipoCalendario: 'Escrever', date: moment(this.state.date).format(' DD[/]MM[/]YYYY') })}>
-                  <Icon name='calendar-edit' size={25} color={this.state.tipoCalendario == 'Escrever' ? '#024EB4' : null} />
+                  <Icon name='calendar-edit' size={25} color={this.state.tipoCalendario == 'Escrever' ? '#024EB4' : '#757575'} />
                 </TouchableNativeFeedback>
 
               </View>
