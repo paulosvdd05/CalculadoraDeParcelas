@@ -154,7 +154,7 @@ export default class App extends Component {
           </TouchableOpacity>
         </View>
         <View style={[styles.FlatListContainer, this.state.parcelas == '' ? {justifyContent:'center', alignItems:'center'} : null ]}>
-        {this.state.parcelas == '' ? <Text>Nenhuma parcela calculada...</Text>
+        {this.state.parcelas == '' ? <Text style={{color:'#313131'}}>Nenhuma parcela calculada...</Text>
            : <FlatList style={styles.prodList}
             data={this.state.lista}
             keyExtractor={item => `${item.id}`}
