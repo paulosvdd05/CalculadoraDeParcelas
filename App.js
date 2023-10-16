@@ -102,7 +102,7 @@ export default class App extends Component {
             <Text>Data:</Text>
             <View style={[styles.input, { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }]}>
               {this.state.tipoCalendario == 'Selecionar' ? this.getDatePicker() : <MaskInput
-                style={{ flex: 1 }}
+                style={{ flex: 1, color: '#313131' }}
                 value={this.state.date}
                 mask={Masks.DATE_DDMMYYYY}
                 onChangeText={date => this.setState({ date })}
